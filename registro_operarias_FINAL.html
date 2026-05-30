@@ -318,7 +318,8 @@
     </div>
 
     <div style="position:relative;margin-bottom:12px;"><span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:DM Mono,monospace;font-size:16px;color:var(--muted);pointer-events:none;">COD</span><input type="text" id="codigo" placeholder="000" maxlength="3" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:DM Mono,monospace;font-size:16px;padding:14px 16px 14px 56px;outline:none;width:100%;box-sizing:border-box;letter-spacing:3px;" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-    <input type="number" id="cantidad" placeholder="Cantidad de vestidos" min="1" max="999" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:Sora,sans-serif;font-size:16px;padding:14px 16px;outline:none;width:100%;box-sizing:border-box;">
+    <input type="number" id="cantidad" placeholder="Cantidad de vestidos" min="1" max="999" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:Sora,sans-serif;font-size:16px;padding:14px 16px;outline:none;width:100%;box-sizing:border-box;margin-bottom:12px;">
+    <textarea id="notas" placeholder="Notas u observaciones (opcional)" maxlength="200" rows="2" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:Sora,sans-serif;font-size:14px;padding:12px 16px;outline:none;width:100%;box-sizing:border-box;resize:none;"></textarea>
   </div>
 
   <!-- Estado y botones -->
@@ -376,7 +377,7 @@
 let horaInicio = null;
 let horaFin    = null;
 let registros  = JSON.parse(localStorage.getItem('registros_hoy') || '[]');
-let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFPf3jCoR5kQzN8ZQpL67EYjXktE4Otl5Zg6D6Sqn-xTgJJdlusUE9be5Xc41MJ60U/exec";
+let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8DUIFQ2Nt8dOBxIUEddfs0xs0FwoT3A9VEs-8-KGR-D8BwDwgCYZTurgcMyV5mZcL/exec";
 
 // ── Config ────────────────────────────────────────────────────────────
 function saveConfig() {
@@ -443,6 +444,7 @@ function marcarInicio() {
   document.getElementById('operaria').disabled = true;
   document.getElementById('codigo').disabled   = true;
   document.getElementById('cantidad').disabled = true;
+  document.getElementById('notas').disabled   = true;
 
   showToast('Inicio marcado ✓', 'info');
 }
@@ -476,6 +478,7 @@ function cancelar() {
   document.getElementById('operaria').disabled = false;
   document.getElementById('codigo').disabled   = false;
   document.getElementById('cantidad').disabled = false;
+  document.getElementById('notas').disabled   = false;
 }
 
 async function enviarRegistro() {
@@ -489,6 +492,7 @@ async function enviarRegistro() {
   const codigoRaw = document.getElementById('codigo').value.trim();
   const codigo = codigoRaw.padStart(3, '0');
   const cantidad = document.getElementById('cantidad').value.trim();
+  const notas    = document.getElementById('notas').value.trim();
   const fecha    = horaInicio.toLocaleDateString('es-CR', {weekday:'long', day:'numeric', month:'numeric'});
   const ini      = horaInicio.toLocaleTimeString('es-CR', {hour:'2-digit', minute:'2-digit'});
   const fin      = horaFin.toLocaleTimeString('es-CR', {hour:'2-digit', minute:'2-digit'});
@@ -501,11 +505,11 @@ async function enviarRegistro() {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fecha, operaria, codigo, cantidad, inicio: ini, fin })
+      body: JSON.stringify({ fecha, operaria, codigo, cantidad, inicio: ini, fin, notas })
     });
 
     // Guardar en historial local
-    const reg = { fecha, operaria, codigo, cantidad, inicio: ini, fin, ts: Date.now() };
+    const reg = { fecha, operaria, codigo, cantidad, inicio: ini, fin, notas, ts: Date.now() };
     registros.unshift(reg);
     localStorage.setItem('registros_hoy', JSON.stringify(registros.slice(0, 50)));
     renderLog();
@@ -515,6 +519,7 @@ async function enviarRegistro() {
       cancelar();
       document.getElementById('codigo').value = '';
       document.getElementById('cantidad').value = '';
+      document.getElementById('notas').value = '';
       document.getElementById('btnSend').textContent = '✓ Guardar en planilla';
     }, 1000);
 
@@ -546,7 +551,7 @@ function renderLog() {
       <div class="log-dot"></div>
       <div class="log-info">
         <div class="log-codigo">COD ${r.codigo} (${r.cantidad}u) <span style="color:var(--muted);font-weight:400;font-size:12px;">— ${r.operaria}</span></div>
-        <div class="log-meta">${r.fecha}</div>
+        <div class="log-meta">${r.fecha}${r.notas ? " · " + r.notas : ""}</div>
       </div>
       <div class="log-time">${r.inicio}<br><span style="color:var(--muted)">→</span> ${r.fin}</div>
     </div>
