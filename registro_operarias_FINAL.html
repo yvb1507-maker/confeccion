@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -317,7 +317,7 @@
       </select>
     </div>
 
-    <input type="text" id="codigo" placeholder="Código del vestido (ej: 047)" maxlength="20" style="margin-bottom:12px;">
+    <div style="position:relative;margin-bottom:12px;"><span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:DM Mono,monospace;font-size:16px;color:var(--muted);pointer-events:none;">COD</span><input type="text" id="codigo" placeholder="000" maxlength="3" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:DM Mono,monospace;font-size:16px;padding:14px 16px 14px 56px;outline:none;width:100%;box-sizing:border-box;letter-spacing:3px;" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
     <input type="number" id="cantidad" placeholder="Cantidad de vestidos" min="1" max="999" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:Sora,sans-serif;font-size:16px;padding:14px 16px;outline:none;width:100%;box-sizing:border-box;">
   </div>
 
@@ -376,7 +376,7 @@
 let horaInicio = null;
 let horaFin    = null;
 let registros  = JSON.parse(localStorage.getItem('registros_hoy') || '[]');
-let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwU_b4m3fCEA0BWr1JF9dZ2N2OGPmsLufKQs7CijX9rTbkw6dw8-xFvMD6DbGstVmvk/exec";
+let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwS3cKSUDeDgh_NSwIJ3f05LGoO1dQLnHppZgFULCz-njvFHKJRcDL_exPlkQ4bckHk/exec";
 
 // ── Config ────────────────────────────────────────────────────────────
 function saveConfig() {
@@ -486,7 +486,8 @@ async function enviarRegistro() {
   }
 
   const operaria = document.getElementById('operaria').value;
-  const codigo   = document.getElementById('codigo').value.trim().toUpperCase();
+  const codigoRaw = document.getElementById('codigo').value.trim();
+  const codigo = codigoRaw.padStart(3, '0');
   const cantidad = document.getElementById('cantidad').value.trim();
   const fecha    = horaInicio.toLocaleDateString('es-CR', {weekday:'long', day:'numeric', month:'numeric'});
   const ini      = horaInicio.toLocaleTimeString('es-CR', {hour:'2-digit', minute:'2-digit'});
