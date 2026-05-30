@@ -377,7 +377,7 @@
 let horaInicio = null;
 let horaFin    = null;
 let registros  = JSON.parse(localStorage.getItem('registros_hoy') || '[]');
-let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8DUIFQ2Nt8dOBxIUEddfs0xs0FwoT3A9VEs-8-KGR-D8BwDwgCYZTurgcMyV5mZcL/exec";
+let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw4zyfXabcHtA6ftYxW7V6SYwpXwJT7iPMjkt_kgNS_EihO_oIDuL684AYxcl0KZNQB/exec";
 
 // ── Config ────────────────────────────────────────────────────────────
 function saveConfig() {
@@ -444,7 +444,7 @@ function marcarInicio() {
   document.getElementById('operaria').disabled = true;
   document.getElementById('codigo').disabled   = true;
   document.getElementById('cantidad').disabled = true;
-  document.getElementById('notas').disabled   = true;
+  // notas se mantiene editable durante la confeccion
 
   showToast('Inicio marcado ✓', 'info');
 }
@@ -478,7 +478,7 @@ function cancelar() {
   document.getElementById('operaria').disabled = false;
   document.getElementById('codigo').disabled   = false;
   document.getElementById('cantidad').disabled = false;
-  document.getElementById('notas').disabled   = false;
+  // notas siempre editable
 }
 
 async function enviarRegistro() {
