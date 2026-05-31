@@ -385,13 +385,13 @@ function saveConfig() {
   if (!url.startsWith('https://')) return showToast('URL inválida', 'error');
   SCRIPT_URL = url;
   localStorage.setItem('script_url', url);
-  document.getElementById('configPanel').style.display = 'none';
+  const cp = document.getElementById('configPanel'); if(cp) cp.style.display = 'none';
   showToast('URL guardada ✓', 'success');
 }
 
 function initConfig() {
   if (SCRIPT_URL) {
-    document.getElementById('configPanel').style.display = 'none';
+    const cp = document.getElementById('configPanel'); if(cp) cp.style.display = 'none';
   } else {
     document.getElementById('scriptUrl').value = SCRIPT_URL;
   }
@@ -484,7 +484,7 @@ function cancelar() {
 async function enviarRegistro() {
   if (!SCRIPT_URL) {
     showToast('Configurá la URL primero', 'error');
-    document.getElementById('configPanel').style.display = 'block';
+    const cp2 = document.getElementById('configPanel'); if(cp2) cp2.style.display = 'block';
     return;
   }
 
@@ -501,11 +501,12 @@ async function enviarRegistro() {
   document.getElementById('btnSend').textContent = '⏳ Guardando...';
 
   try {
+    const params = new URLSearchParams({ fecha, operaria, codigo, cantidad, inicio: ini, fin, notas });
     await fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fecha, operaria, codigo, cantidad, inicio: ini, fin, notas })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
     });
 
     // Guardar en historial local
