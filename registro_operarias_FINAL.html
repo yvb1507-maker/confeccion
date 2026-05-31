@@ -377,7 +377,7 @@
 let horaInicio = null;
 let horaFin    = null;
 let registros  = JSON.parse(localStorage.getItem('registros_hoy') || '[]');
-let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBX9H_7HFgrk57cPX9X9sSfp35NY-oEea2kXugo_nBcM85P32A1bmpgd4XA6hcXt32/exec";
+let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAHFTYE9CKDL_POphVgdH6V7Buw1Y_wIxPVrbTqVaLLGb1s7ETPFEES3JmmPlXFWOT/exec";
 
 // ── Config ────────────────────────────────────────────────────────────
 function saveConfig() {
@@ -503,7 +503,7 @@ async function enviarRegistro() {
   try {
     const params = new URLSearchParams({ fecha, operaria, codigo, cantidad, inicio: ini, fin, notas });
     await fetch(SCRIPT_URL + '?' + params.toString(), {
-      method: 'POST',
+      method: 'GET',
       mode: 'no-cors',
     });
 
