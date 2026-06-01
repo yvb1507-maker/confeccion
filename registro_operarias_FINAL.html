@@ -426,6 +426,10 @@ function marcarInicio() {
   if (!validar()) return;
   horaInicio = new Date();
   horaFin    = null;
+  localStorage.setItem('estado_inicio', horaInicio.toISOString());
+  localStorage.setItem('estado_operaria', document.getElementById('operaria').value);
+  localStorage.setItem('estado_codigo', document.getElementById('codigo').value.trim());
+  localStorage.setItem('estado_cantidad', document.getElementById('cantidad').value.trim());
 
   document.getElementById('valInicio').textContent =
     horaInicio.toLocaleTimeString('es-CR', {hour:'2-digit', minute:'2-digit'});
@@ -465,6 +469,10 @@ function marcarFin() {
 
 function cancelar() {
   horaInicio = null; horaFin = null;
+  localStorage.removeItem('estado_inicio');
+  localStorage.removeItem('estado_operaria');
+  localStorage.removeItem('estado_codigo');
+  localStorage.removeItem('estado_cantidad');
   document.getElementById('valInicio').textContent = '--:--';
   document.getElementById('valFin').textContent    = '--:--';
   document.getElementById('valInicio').classList.add('empty');
@@ -559,6 +567,33 @@ function renderLog() {
   `).join('');
 }
 
+function restaurarEstado() {
+  const ini = localStorage.getItem('estado_inicio');
+  if (!ini) return;
+  horaInicio = new Date(ini);
+  // Restaurar campos
+  const op  = localStorage.getItem('estado_operaria');
+  const cod = localStorage.getItem('estado_codigo');
+  const cant = localStorage.getItem('estado_cantidad');
+  if (op)   document.getElementById('operaria').value  = op;
+  if (cod)  document.getElementById('codigo').value    = cod;
+  if (cant) document.getElementById('cantidad').value  = cant;
+  // Restaurar UI
+  document.getElementById('valInicio').textContent =
+    horaInicio.toLocaleTimeString('es-CR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('valInicio').classList.remove('empty');
+  document.getElementById('boxInicio').classList.add('filled');
+  setStatus('active', 'Trabajando');
+  document.getElementById('btnStart').disabled  = true;
+  document.getElementById('btnFinish').disabled = false;
+  document.getElementById('btnSend').disabled   = true;
+  document.getElementById('btnCancel').style.display = 'block';
+  document.getElementById('operaria').disabled = true;
+  document.getElementById('codigo').disabled   = true;
+  document.getElementById('cantidad').disabled = true;
+  showToast('Sesión restaurada ✓', 'info');
+}
+
 function showToast(msg, type='info') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -569,6 +604,7 @@ function showToast(msg, type='info') {
 // ── Init ──────────────────────────────────────────────────────────────
 initConfig();
 renderLog();
+restaurarEstado();
 </script>
 </body>
 </html>
