@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Registro de Confección</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c6af7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Confeccion">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
   :root {
     --bg: #0f0f13;
@@ -311,8 +317,7 @@
     <div class="select-wrap" style="margin-bottom:12px;">
       <select id="operaria">
         <option value="">— Seleccioná tu nombre —</option>
-        <option>Valverde</option>
-        <option>Monge</option>
+        <option>Quesada</option>
         <option>Zuñiga</option>
         <!-- Agregá más operarias aquí -->
       </select>
@@ -599,6 +604,11 @@ function showToast(msg, type='info') {
   t.textContent = msg;
   t.className = `toast ${type} show`;
   setTimeout(() => t.className = `toast ${type}`, 2500);
+}
+
+// ── Service Worker ───────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
 // ── Init ──────────────────────────────────────────────────────────────
